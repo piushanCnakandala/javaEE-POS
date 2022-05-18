@@ -12,6 +12,7 @@ generateCustomerId();
             success:function (resp){
                 if (resp.status==200){
                     loadAllCustomer();
+                    generateCustomerId();
 
                 }else {
                     alert(resp.data)
@@ -22,21 +23,8 @@ generateCustomerId();
                 console.log(textStatus);
                 console.log(error);
             }
-        })
+        });
 
-       /* let customerId = $("#inputCId").val();
-        let customerName = $("#inputCName").val();
-        let customerAge = $("#inputCAge").val();
-        let customerTp = $("#inputCTp").val();
-
-
-        /!*var customerOB = {   //input data to array
-            id: customerId,
-            name: customerName,
-            age: customerAge,
-            tp: customerTp
-
-        };*!/
 
          var customerOB= new CustomerDTO(customerId,customerName,customerAge,customerTp);
         customerDB.push(customerOB);
@@ -119,6 +107,7 @@ $("#inputCAge").keydown(function (event) {
 });
 
 loadAllCustomer();
+generateCustomerId();
 
 function loadAllCustomer(){ //input data to table
     $("#customerTable").empty();
@@ -135,12 +124,6 @@ function loadAllCustomer(){ //input data to table
             }
         }
     });
-/*for(var i of customerDB){
-    let raw = `<tr><td>${i.getCustomerId()}</td><td>${i.getCustomerName()}</td><td>${i.getCustomerAge()}</td><td>${i.getCustomerTp()}</td></tr>`
-    $("#customerTable").append(raw);
-    bindCustomer();
-    deleteCustomer();*/
-
 }
 
 
@@ -193,24 +176,18 @@ function clearFields(){
 
 function generateCustomerId() {
 
-    let index = customerDB.length - 1;
-    let id;
-    let temp;
-    if (index != -1) {
-        id = customerDB[customerDB.length - 1].getCustomerId();
-        temp = id.split("-")[1];
-        temp++;
-    }
+    $.ajax({
+        url:"http://localhost:8080/backend/customer?option=GenId",
+        method:"GET",
+        success:function (resp){
+            if (resp.status==200){
+                $("#inputCId").val(resp.data.id);
+            }else {
+                alert(resp.data);
+            }
 
-    if (index == -1) {
-        $("#inputCId").val("C00-001");
-    } else if (temp <= 9) {
-        $("#inputCId").val("C00-00" + temp);
-    } else if (temp <= 99) {
-        $("#inputCId").val("C00-0" + temp);
-    } else {
-        $("#inputCId").val("C00-" + temp);
-    }
+        }
+    });
 
 }
 
