@@ -13,6 +13,7 @@ import javax.sql.DataSource;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
@@ -71,5 +72,50 @@ public class CustomerServlet extends HttpServlet {
             }
         }
 
+    }
+
+    @Override
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        resp.setContentType("application/json");
+        String id = req.getParameter("cusId");
+        String name = req.getParameter("custName");
+        String address= req.getParameter("cusAddress");
+        String salary = req.getParameter("cusSalary");
+
+        PrintWriter writer = resp.getWriter();
+        Connection connection =null;
+        try {
+            connection= dataSources.getConnection();
+            PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO customer VALUES(?,?,?,?)");
+            preparedStatement.setObject(1,id);
+            preparedStatement.setObject(2,name);
+            preparedStatement.setObject(3,address);
+            preparedStatement.setObject(4,salary);
+
+            if(preparedStatement.executeUpdate()>0){
+                JsonObjectBuilder objectBuilder = Json.createObjectBuilder();
+                  resp.setStatus(HttpServletResponse.SC_CREATED);
+                  objectBuilder.add("status",200);
+                objectBuilder.add("message","customer Added success");
+                objectBuilder.add("data","");
+                writer.print(objectBuilder.build());
+            }
+
+        } catch (SQLException throwables) {
+            JsonObjectBuilder objectBuilder = Json.createObjectBuilder();
+            resp.setStatus(HttpServletResponse.SC_OK);
+            objectBuilder.add("status",400);
+            objectBuilder.add("message","Error");
+            objectBuilder.add("data",throwables.getLocalizedMessage());
+            writer.print(objectBuilder.build());
+            throwables.printStackTrace();
+        }
+        finally {
+            try {
+                connection.close();
+            } catch (SQLException throwables) {
+                throwables.printStackTrace();
+            }
+        }
     }
 }

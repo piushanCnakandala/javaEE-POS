@@ -5,46 +5,28 @@ generateCustomerId();
     $("#addCust").click(function () {
         $("#customerTable>tr").off("click");
 
-        $.ajax({
-            url: "http://localhost:8080/backend/customer",
-            method: "POST",
-            data:$("#customerForm").serialize(),
-            success:function (resp){
-                if (resp.status==200){
-                    loadAllCustomer();
-
-                }else {
-                    alert(resp.data)
-                }
-            },
-            error:function (ob,textStatus,error){
-                console.log(ob);
-                console.log(textStatus);
-                console.log(error);
-            }
-        })
-
-       /* let customerId = $("#inputCId").val();
+        let customerId = $("#inputCId").val();
         let customerName = $("#inputCName").val();
         let customerAge = $("#inputCAge").val();
         let customerTp = $("#inputCTp").val();
 
 
-        /!*var customerOB = {   //input data to array
+        /*var customerOB = {   //input data to array
             id: customerId,
             name: customerName,
             age: customerAge,
             tp: customerTp
 
-        };*!/
+        };*/
 
          var customerOB= new CustomerDTO(customerId,customerName,customerAge,customerTp);
-        customerDB.push(customerOB);
 
+        customerDB.push(customerOB);
+        loadAllCustomer();
 
         clearFields();
         generateCustomerId();
-*/
+
 
     });
 
@@ -128,7 +110,7 @@ function loadAllCustomer(){ //input data to table
         success:function (resp){
             console.log(resp);
             for (const customer of resp.data){
-                let raw = `<tr><td>${customer.id}</td><td>${customer.name}</td><td>${customer.address}</td><td>${customer.salary}</td></tr>`
+                let raw = `<tr><td>${customer.id}</td><td>${customer.name}</td><td>${customer,address}</td><td>${customer.salary}</td></tr>`
                 $("#customerTable").append(raw);
                 bindCustomer();
                 deleteCustomer();
