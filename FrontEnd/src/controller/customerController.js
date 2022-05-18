@@ -32,25 +32,31 @@ generateCustomerId();
 
         clearFields();
         generateCustomerId();
-*/
+
 
     });
 
 //customer delete
 
-
 function deleteCustomer(){
 
     $("#customerDelete").click(function () {
-        let customerId = $("#inputCId").val();
-       for (let i=0;i< customerDB.length;i++){
-           if (customerDB[i].getCustomerId()==customerId){
-               customerDB.splice(i,1);
-           }
-       }
-loadAllCustomer();
-       clearFields();
-       generateCustomerId();
+        let tempData=$("#inputCId").val();
+        $.ajax({
+            url:`http://localhost:8080/backend/customer?customerID=${tempData}`,
+            method:"DELETE",
+            success:function (resp){
+                if (resp.status==200){
+                    loadAllCustomer();
+                    clearFields();
+                    generateCustomerId();
+
+                }else {
+                    alert(resp.data);
+                }
+            }
+        })
+
     });
 }
 
