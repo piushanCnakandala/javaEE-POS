@@ -1,33 +1,36 @@
 // CRUD Operations
 generateItemId();
+loadAllItems();
 
 //item add
 
 $("#addItem").click(function () {
 
     $("#itemTable>tr").off("click");
+    $.ajax({
+       url: "http://localhost:8080/backend/item" ,
+        method: "POST",
+        data: $("#itemForm").serialize(),
+        success:function (resp){
+           if (resp.status==200){
+               loadAllItems();
+               generateItemId()
+           }else {
+               alert(resp.data)
+           }
+        },
+        error:function (ob,textStatus,error){
+            console.log(ob);
+            console.log(textStatus);
+            console.log(error);
+        }
+    });
 
-    let itemId = $("#inputItemId").val();
-    let itemName = $("#inputItemName").val();
-    let itemQuantity = $("#inputQuantity").val();
-    let itemPrice= $("#inputItemPrice").val();
+    /*var itemOB=new ItemDTO(itemId,itemName,itemQuantity,itemPrice);
 
-
-   /* var itemOB={
-        id:itemId,
-        name:itemName,
-        qty:itemQuantity,
-        price:itemPrice
-
-    };*/
-
-    var itemOB=new ItemDTO(itemId,itemName,itemQuantity,itemPrice);
-
-    itemDB.push(itemOB);
-    loadAllItems();
-    clearInputItemFields();
-    generateItemId();
-    loadAllItemIds();
+    itemDB.push(itemOB);*/
+   /* loadAllItems();
+    clearInputItemFields();*/
 
 });
 
@@ -67,7 +70,7 @@ $("#btnItemUpdate").click(function (){
 
             loadAllItems();
             clearFields();
-            generateItemId();
+
         }
     }
 });
@@ -84,10 +87,16 @@ $("#btnClear").click(function (){
 function loadAllItems(){ //input data to table
     $("#itemTable").empty();
     $.ajax({
-        url :"http://localhost:8080/backend/item",
+        url :"http://localhost:8080/backend/item?option=GetAll",
         method :"GET",
         success:function (resp){
             console.log(resp);
+            for (const item of resp.data){
+                let raw = `<tr><td>${item.itemId}</td><td>${item.name}</td><td>${item.qtyOnHand}</td><td>${item.unitPrice}</td></tr>`
+                $("#itemTable").append(raw);
+                bindItemRow();
+
+            }
 
         }
     });
@@ -176,24 +185,18 @@ function clearInputItemFields(){    //clear input text fiels
 
 function generateItemId() {
 
-    let index = itemDB.length - 1;
-    let id;
-    let temp;
-    if (index != -1) {
-        id = itemDB[itemDB.length - 1].getItemId();
-        temp = id.split("-")[1];
-        temp++;
-    }
+    $.ajax({
+        url:"http://localhost:8080/backend/item?option=GenId",
+        method:"GET",
+        success:function (resp){
+            if (resp.status==200){
+                $("#inputItemId").val(resp.data.id);
+            }else {
+                alert(resp.data);
+            }
 
-    if (index == -1) {
-        $("#inputItemId").val("I00-001");
-    } else if (temp <= 9) {
-        $("#inputItemId").val("I00-00" + temp);
-    } else if (temp <= 99) {
-        $("#inputItemId").val("I00-0" + temp);
-    } else {
-        $("#inputItemId").val("I00-" + temp);
-    }
+        }
+    });
 
 }
 

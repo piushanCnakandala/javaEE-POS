@@ -1,4 +1,5 @@
 // CRUD Operations
+generateItemId();
 loadAllItems();
 
 //item add
@@ -13,6 +14,7 @@ $("#addItem").click(function () {
         success:function (resp){
            if (resp.status==200){
                loadAllItems();
+               generateItemId()
            }else {
                alert(resp.data)
            }
@@ -24,11 +26,11 @@ $("#addItem").click(function () {
         }
     });
 
-    var itemOB=new ItemDTO(itemId,itemName,itemQuantity,itemPrice);
+    /*var itemOB=new ItemDTO(itemId,itemName,itemQuantity,itemPrice);
 
-    itemDB.push(itemOB);
-    loadAllItems();
-    clearInputItemFields();
+    itemDB.push(itemOB);*/
+   /* loadAllItems();
+    clearInputItemFields();*/
 
 });
 
@@ -180,7 +182,7 @@ function clearInputItemFields(){    //clear input text fiels
     $("#inputItemName,#inputItemId,#inputQuantity,#inputItemPrice").val("");
 }
 
-/*
+
 function generateItemId() {
 
     $.ajax({
@@ -196,7 +198,7 @@ function generateItemId() {
         }
     });
 
-}*/
+}
 
 
 // Validations

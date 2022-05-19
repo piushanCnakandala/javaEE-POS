@@ -51,18 +51,46 @@ public class ItemServlet extends HttpServlet {
 
                        arrayBuilder.add(objectBuilder.build());
                    }
+                   dataMsgBuilder.add("data", arrayBuilder.build());
+                   dataMsgBuilder.add("massage", "Done");
+                   dataMsgBuilder.add("status", "200");
 
+                   writer.print(dataMsgBuilder.build());
+                   break;
+
+
+               case "GenId":
+                   ResultSet genId = connection.prepareStatement("SELECT itemId FROM item ORDER BY itemId DESC LIMIT 1").executeQuery();
+                   if (genId.next()){
+                       int tempId = Integer.parseInt(genId.getString(1).split("-")[1]);
+                       tempId += 1;
+                       if (tempId < 10) {
+                           objectBuilder.add("id", "I00-00" + tempId);
+                       } else if (tempId < 100) {
+                           objectBuilder.add("id", "I00-0" + tempId);
+                       } else if (tempId < 1000) {
+                           objectBuilder.add("id", "I00-" + tempId);
+                       }
+                   }else {
+                       objectBuilder.add("itemId","I00-000");
+
+                   }
+                   dataMsgBuilder.add("data", objectBuilder.build());
+                   dataMsgBuilder.add("message", "Done");
+                   dataMsgBuilder.add("status", 200);
+                   writer.print(dataMsgBuilder.build());
+                   break;
            }
-            dataMsgBuilder.add("data", arrayBuilder.build());
-            dataMsgBuilder.add("massage", "Done");
-            dataMsgBuilder.add("status", "200");
-
-            writer.print(dataMsgBuilder.build());
 
         } catch (SQLException throwables) {
             throwables.printStackTrace();
+        }finally {
+            try {
+                connection.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
-
 
     }
 
@@ -71,8 +99,8 @@ public class ItemServlet extends HttpServlet {
         resp.setContentType("application/json");
         String id = req.getParameter("itemId");
         String name = req.getParameter("name");
-        int qty = Integer.parseInt(req.getParameter("qtyOnHand"));
-        double price = Double.parseDouble(req.getParameter("unitPrice"));
+        String qty =req.getParameter("qty");
+       String price = req.getParameter("price");
 
         PrintWriter writer = resp.getWriter();
         Connection connection = null;
