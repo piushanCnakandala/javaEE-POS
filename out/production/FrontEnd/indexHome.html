@@ -18,13 +18,13 @@
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav">
                 <li class="nav-item">
-                    <a id="click-Home" aria-current="page" class="nav-link active">Home</a>
+                    <a aria-current="page" class="nav-link active" id="click-Home">Home</a>
                 </li>
                 <li class="nav-item">
-                    <a id="click-Order" class="nav-link">Orders</a>
+                    <a class="nav-link" id="click-Order">Orders</a>
                 </li>
                 <li class="nav-item">
-                    <a id="click-Item" class="nav-link">Items</a>
+                    <a class="nav-link" id="click-Item">Items</a>
                 </li>
             </ul>
 
@@ -60,50 +60,60 @@
         <section class="row">
             <div class="col-12 bg-info">
                 <div class="mb-2">
-                    <label  class="form-label fw-bold ">Search Customer</label>
+                    <label class="form-label fw-bold ">Search Customer</label>
                     <input aria-describedby="emailHelp" class="form-control" id="txtCustomerSearch" type="id">
                 </div>
-                <button id="btnCustomerSearch" class="btn btn-dark" type="button">Search</button>
+                <button class="btn btn-dark" id="btnCustomerSearch" type="button">Search</button>
 
 
-                <div class="col  mb-2>
-                    <div class="p-2">
-                        <span class="d-block p-2 bg-info text-white">Add Customer</span>
+                <div class="col  mb-2">
+                    <div class=" p-2">
+                <span class="d-block p-2 bg-info text-white">Add Customer</span>
+                <form id="customerForm">
+                    <div class="modal-body">
 
-                        <div class="modal-body">
-                            <div class="row">
-                                <div class="col">
-                                    <label   class="form-label fw-bold" for="itemName">Customer ID:</label>
-                                    <input  id="inputCId" class="form-control" id="customerSalary" placeholder="" type="">
-                                    </select>
-                                </div>
-                                <div class="col">
-                                    <label class="form-label fw-bold" for="itemName">Customer Name:</label>
-                                    <input id="inputCName" class="form-control" id=customerName" placeholder="" type="">
-                                </div>
+                        <div class="row">
+
+                            <div class="col">
+                                <label class="form-label fw-bold" for="inputCId">Customer ID:</label>
+                                <input class="form-control" id="inputCId" id="customerSalary" name="cusId"
+                                       placeholder=""
+                                       type="">
+                                </select>
                             </div>
-                            <div class="row mt-3">
+                            <div class="col">
+                                <label class="form-label fw-bold" for="inputCName">Customer Name:</label>
+                                <input class="form-control" id="inputCName" id=customerName" name="custName"
+                                       placeholder=""
+                                       type="">
+                            </div>
+                        </div>
 
-                                <div class="col">
-                                    <label class="form-label fw-bold" for="qtyOnHand">Age:</label>
-                                    <input  id="inputCAge"class="form-control" id="age" placeholder="" type="">
-                                </div>
-                                <div class="col">
-                                    <label class="form-label fw-bold" for="price">Tp:</label>
-                                    <input id="inputCTp" class="form-control" id="tp" placeholder="" type="">
-                                </div>
+                        <div class="row mt-3">
+
+                            <div class="col">
+                                <label class="form-label fw-bold" for="inputCAge">Age:</label>
+                                <input class="form-control" id="inputCAge" id="age" name="cusAddress" placeholder=""
+                                       type="">
+                            </div>
+                            <div class="col">
+                                <label class="form-label fw-bold" for="inputCTp">Tp:</label>
+                                <input class="form-control" id="inputCTp" id="tp" name="cusSalary" placeholder=""
+                                       type="">
                             </div>
                         </div>
                     </div>
-                </div>
+                </form>
+            </div>
+            </div>
 
             </div>
-           <!--buttons add,clear,delete-->
+            <!--buttons add,clear,delete-->
             <div class="col-12 g-5 ">
-                <button id="customerDelete" class="btn btn-danger" type="button">Delete</button>
-                <button id="customerUpdate" class="btn btn-dark" type="button"> Update</button>
-                <button  id="clearField" class="btn btn-success" type="button">Clear</button>
-                <button id="addCust" class="btn btn-success" type="button">Add Customer</button>
+                <button class="btn btn-danger" id="customerDelete" type="button">Delete</button>
+                <button class="btn btn-dark" id="customerUpdate" type="button"> Update</button>
+                <button class="btn btn-success" id="clearField" type="button">Clear</button>
+                <button class="btn btn-success" id="addCust" type="button">Add Customer</button>
             </div>
 
         </section>
@@ -147,34 +157,35 @@
                     <label class="form-label fw-bold ">Item Search </label>
                     <input aria-describedby="emailHelp" class="form-control" id="txtItemSearch" type="id">
                 </div>
-                <button id="btnSearchItem" class="btn btn-dark" type="button">Search</button>
+                <button class="btn btn-dark" id="btnSearchItem" type="button">Search</button>
             </div>
 
-            <div class="col  mb-2>
-                    <div class="p-2">
+            <div class="col  mb-2">
+                    <div class=" p-2
+            ">
             <span class="d-block p-2 bg-info text-white">Add Item</span>
 
             <div class="modal-body">
                 <div class="row">
                     <div class="col">
-                        <label   class="form-label fw-bold" for="inputitemName">Item Id:</label>
-                        <input  id="inputItemId" class="form-control"  placeholder="" type="">
+                        <label class="form-label fw-bold" for="inputitemName">Item Id:</label>
+                        <input class="form-control" id="inputItemId" placeholder="" type="">
                         </select>
                     </div>
                     <div class="col">
                         <label class="form-label fw-bold" for="inputitemName">Name:</label>
-                        <input id="inputItemName" class="form-control"  placeholder="" type="">
+                        <input class="form-control" id="inputItemName" placeholder="" type="">
                     </div>
                 </div>
                 <div class="row mt-3">
 
                     <div class="col">
                         <label class="form-label fw-bold" for="inputQuantity">Quantity:</label>
-                        <input  id="inputQuantity"class="form-control" id="itemQuantity" placeholder="" type="">
+                        <input class="form-control" id="inputQuantity" id="itemQuantity" placeholder="" type="">
                     </div>
                     <div class="col">
                         <label class="form-label fw-bold" for="inputItemPrice">Price:</label>
-                        <input id="inputItemPrice" class="form-control"  placeholder="" type="">
+                        <input class="form-control" id="inputItemPrice" placeholder="" type="">
                     </div>
                 </div>
             </div>
@@ -183,10 +194,10 @@
 
             <!--buttons add,clear,delete-->
             <div class="col-12 g-5 ">
-                <button id="btnDelete" class="btn btn-danger" type="button">Delete</button>
-                <button  id="btnItemUpdate" class="btn btn-dark" type="button">Update</button>
-                <button  id="btnClear" class="btn btn-success" type="button">Clear</button>
-                <button id="addItem" class="btn btn-success" type="button">Add Item</button>
+                <button class="btn btn-danger" id="btnDelete" type="button">Delete</button>
+                <button class="btn btn-dark" id="btnItemUpdate" type="button">Update</button>
+                <button class="btn btn-success" id="btnClear" type="button">Clear</button>
+                <button class="btn btn-success" id="addItem" type="button">Add Item</button>
             </div>
 
         </section>
@@ -226,7 +237,7 @@
                             <div class="row">
                                 <div class="col">
                                     <label class="form-label fw-bold" for="oIdItxt">Order ID:</label>
-                                    <input class="form-control" id="oIdItxt"  type="text">
+                                    <input class="form-control" id="oIdItxt" type="text">
                                 </div>
                                 <div class="col">
                                     <label class="form-label fw-bold" for="txtDate">Date:</label>
@@ -250,7 +261,7 @@
                                 </div>
                                 <div class="col">
                                     <label class="form-label fw-bold" for="txtTp">Address:</label>
-                                    <input class="form-control" id="txtTp"  type="text">
+                                    <input class="form-control" id="txtTp" type="text">
                                 </div>
                             </div>
                         </div>
@@ -282,17 +293,17 @@
                                 </div>
                                 <div class="col">
                                     <label class="form-label fw-bold" for="txtprice">Price:</label>
-                                    <input class="form-control" id="txtprice"  type="text">
+                                    <input class="form-control" id="txtprice" type="text">
                                 </div>
                             </div>
                             <div class="row mt-3">
                                 <div class="col">
                                     <label class="form-label fw-bold" for="oQty">Order Quantity:</label>
-                                    <input class="form-control" id="oQty"  type="text">
+                                    <input class="form-control" id="oQty" type="text">
                                 </div>
                             </div>
                             <div class="row mt-3 mb-1">
-                                <button id="btnAddToCart" class="btn btn-dark" type="button">Add Item</button>
+                                <button class="btn btn-dark" id="btnAddToCart" type="button">Add Item</button>
                             </div>
                         </div>
                     </div>
@@ -301,17 +312,17 @@
 
                 <div class="col">
                     <div class="p-3 border bg-light">
-                        <h1  id="lblTotal" class="fw-bold fs-4">Total : =</h1>
-                        <h1 id="subTotal" class="fw-bold fs-4">SubTotal : </h1>
+                        <h1 class="fw-bold fs-4" id="lblTotal">Total : =</h1>
+                        <h1 class="fw-bold fs-4" id="subTotal">SubTotal : </h1>
                         <div class="row mt-3">
 
                             <div class="col">
                                 <label class="form-label fw-bold" for="cash1">Cash:</label>
-                                <input class="form-control" id="cash1"  type="text">
+                                <input class="form-control" id="cash1" type="text">
                             </div>
                             <div class="col">
                                 <label class="form-label fw-bold" for="dis">Discount:</label>
-                                <input class="form-control" id="dis"  type="text">
+                                <input class="form-control" id="dis" type="text">
                             </div>
                         </div>
                         <div class="row mt-3">
@@ -322,7 +333,7 @@
                             </div>
                         </div>
                         <div class="row mt-3 mb-1">
-                            <button id="btnPurchase" class="btn btn-success" type="button">Purchase</button>
+                            <button class="btn btn-success" id="btnPurchase" type="button">Purchase</button>
                         </div>
                     </div>
                 </div>

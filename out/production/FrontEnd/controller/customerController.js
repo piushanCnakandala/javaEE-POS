@@ -1,28 +1,35 @@
             //--------------- CRUD Operations-----------------//
 generateCustomerId();
+loadAllCustomer();
 //customer add
 
     $("#addCust").click(function () {
         $("#customerTable>tr").off("click");
 
-        let customerId = $("#inputCId").val();
-        let customerName = $("#inputCName").val();
-        let customerAge = $("#inputCAge").val();
-        let customerTp = $("#inputCTp").val();
+        $.ajax({
+            url: "http://localhost:8080/backend/customer",
+            method: "POST",
+            data:$("#customerForm").serialize(),
+            success:function (resp){
+                if (resp.status==200){
+                    loadAllCustomer();
+                    generateCustomerId();
 
+                }else {
+                    alert(resp.data)
+                }
+            },
+            error:function (ob,textStatus,error){
+                console.log(ob);
+                console.log(textStatus);
+                console.log(error);
+            }
+        });
 
-        /*var customerOB = {   //input data to array
-            id: customerId,
-            name: customerName,
-            age: customerAge,
-            tp: customerTp
-
-        };*/
 
          var customerOB= new CustomerDTO(customerId,customerName,customerAge,customerTp);
-
         customerDB.push(customerOB);
-        loadAllCustomer();
+
 
         clearFields();
         generateCustomerId();
@@ -32,19 +39,25 @@ generateCustomerId();
 
 //customer delete
 
-
 function deleteCustomer(){
 
     $("#customerDelete").click(function () {
-        let customerId = $("#inputCId").val();
-       for (let i=0;i< customerDB.length;i++){
-           if (customerDB[i].getCustomerId()==customerId){
-               customerDB.splice(i,1);
-           }
-       }
-loadAllCustomer();
-       clearFields();
-       generateCustomerId();
+        let tempData=$("#inputCId").val();
+        $.ajax({
+            url:`http://localhost:8080/backend/customer?customerID=${tempData}`,
+            method:"DELETE",
+            success:function (resp){
+                if (resp.status==200){
+                    loadAllCustomer();
+                    clearFields();
+                    generateCustomerId();
+
+                }else {
+                    alert(resp.data);
+                }
+            }
+        })
+
     });
 }
 
@@ -54,7 +67,28 @@ loadAllCustomer();
 //customer Update
 
 $("#customerUpdate").click(function (){
-    let customerId = $("#inputCId").val();
+    var cusData = {
+        id: $("#inputCId").val(),
+        name: $("#inputCName").val(),
+        address: $("#inputCAge").val(),
+        salary: $("#inputCTp").val()
+    }
+    $.ajax({
+        url:"http://localhost:8080/backend/customer",
+        method:"PUT",
+        data: JSON.stringify(cusData),
+        success:function (resp){
+            if (resp.status==200){
+                loadAllCustomer();
+                clearFields();
+            }else {
+                alert(resp.data);
+            }
+        }
+    });
+
+
+    /*let customerId = $("#inputCId").val();
     let customerName = $("#inputCName").val();
     let customerAge = $("#inputCAge").val();
     let customerTp = $("#inputCTp").val();
@@ -68,9 +102,9 @@ $("#customerUpdate").click(function (){
                 loadAllCustomer();
                 clearFields();
                 generateCustomerId();
-                /*$("#btnUpdate").prop('disabled', true);*/
+                /!*$("#btnUpdate").prop('disabled', true);*!/
             }
-    }
+    }*/
 });
 
               // ----------End CRUD Operations------------------------//
@@ -100,7 +134,7 @@ $("#inputCAge").keydown(function (event) {
     }
 });
 
-loadAllCustomer();
+
 
 function loadAllCustomer(){ //input data to table
     $("#customerTable").empty();
@@ -110,19 +144,13 @@ function loadAllCustomer(){ //input data to table
         success:function (resp){
             console.log(resp);
             for (const customer of resp.data){
-                let raw = `<tr><td>${customer.id}</td><td>${customer.name}</td><td>${customer,address}</td><td>${customer.salary}</td></tr>`
+                let raw = `<tr><td>${customer.id}</td><td>${customer.name}</td><td>${customer.address}</td><td>${customer.salary}</td></tr>`
                 $("#customerTable").append(raw);
                 bindCustomer();
                 deleteCustomer();
             }
         }
     });
-/*for(var i of customerDB){
-    let raw = `<tr><td>${i.getCustomerId()}</td><td>${i.getCustomerName()}</td><td>${i.getCustomerAge()}</td><td>${i.getCustomerTp()}</td></tr>`
-    $("#customerTable").append(raw);
-    bindCustomer();
-    deleteCustomer();*/
-
 }
 
 
@@ -175,24 +203,18 @@ function clearFields(){
 
 function generateCustomerId() {
 
-    let index = customerDB.length - 1;
-    let id;
-    let temp;
-    if (index != -1) {
-        id = customerDB[customerDB.length - 1].getCustomerId();
-        temp = id.split("-")[1];
-        temp++;
-    }
+    $.ajax({
+        url:"http://localhost:8080/backend/customer?option=GenId",
+        method:"GET",
+        success:function (resp){
+            if (resp.status==200){
+                $("#inputCId").val(resp.data.id);
+            }else {
+                alert(resp.data);
+            }
 
-    if (index == -1) {
-        $("#inputCId").val("C00-001");
-    } else if (temp <= 9) {
-        $("#inputCId").val("C00-00" + temp);
-    } else if (temp <= 99) {
-        $("#inputCId").val("C00-0" + temp);
-    } else {
-        $("#inputCId").val("C00-" + temp);
-    }
+        }
+    });
 
 }
 

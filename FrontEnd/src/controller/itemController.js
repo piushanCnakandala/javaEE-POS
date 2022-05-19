@@ -1,5 +1,6 @@
 // CRUD Operations
 generateItemId();
+loadAllItems();
 
 //item add
 
@@ -83,13 +84,27 @@ $("#btnClear").click(function (){
 
 function loadAllItems(){ //input data to table
     $("#itemTable").empty();
-    for(var i of itemDB){
+    $.ajax({
+        url :"http://localhost:8080/backend/item?option=GetAll",
+        method :"GET",
+        success:function (resp){
+            console.log(resp);
+            for (const item of resp.data){
+                let raw = `<tr><td>${item.id}</td><td>${item.name}</td><td>${item.qty}</td><td>${item.price}</td></tr>`
+                $("#itemTable").append(raw);
+                bindItemRow();
+                deleteItem();
+            }
+
+        }
+    });
+    /*for(var i of itemDB){
         let raw = `<tr><td>${i.getItemId()}</td><td>${i.getItemName()}</td><td>${i.getItemQty()}</td><td>${i.getItemPrice()}</td></tr>`
         $("#itemTable").append(raw);
         bindItemRow();
         deleteItem();
 
-    }
+    }*/
 }
 
 
