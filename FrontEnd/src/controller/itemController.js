@@ -1,5 +1,4 @@
 // CRUD Operations
-generateItemId();
 loadAllItems();
 
 //item add
@@ -7,28 +6,29 @@ loadAllItems();
 $("#addItem").click(function () {
 
     $("#itemTable>tr").off("click");
-
-    let itemId = $("#inputItemId").val();
-    let itemName = $("#inputItemName").val();
-    let itemQuantity = $("#inputQuantity").val();
-    let itemPrice= $("#inputItemPrice").val();
-
-
-   /* var itemOB={
-        id:itemId,
-        name:itemName,
-        qty:itemQuantity,
-        price:itemPrice
-
-    };*/
+    $.ajax({
+       url: "http://localhost:8080/backend/item" ,
+        method: "POST",
+        data: $("#itemForm").serialize(),
+        success:function (resp){
+           if (resp.status==200){
+               loadAllItems();
+           }else {
+               alert(resp.data)
+           }
+        },
+        error:function (ob,textStatus,error){
+            console.log(ob);
+            console.log(textStatus);
+            console.log(error);
+        }
+    });
 
     var itemOB=new ItemDTO(itemId,itemName,itemQuantity,itemPrice);
 
     itemDB.push(itemOB);
     loadAllItems();
     clearInputItemFields();
-    generateItemId();
-    loadAllItemIds();
 
 });
 
@@ -68,7 +68,7 @@ $("#btnItemUpdate").click(function (){
 
             loadAllItems();
             clearFields();
-            generateItemId();
+
         }
     }
 });
@@ -90,10 +90,10 @@ function loadAllItems(){ //input data to table
         success:function (resp){
             console.log(resp);
             for (const item of resp.data){
-                let raw = `<tr><td>${item.id}</td><td>${item.name}</td><td>${item.qty}</td><td>${item.price}</td></tr>`
+                let raw = `<tr><td>${item.itemId}</td><td>${item.name}</td><td>${item.qtyOnHand}</td><td>${item.unitPrice}</td></tr>`
                 $("#itemTable").append(raw);
                 bindItemRow();
-                deleteItem();
+
             }
 
         }
@@ -180,29 +180,23 @@ function clearInputItemFields(){    //clear input text fiels
     $("#inputItemName,#inputItemId,#inputQuantity,#inputItemPrice").val("");
 }
 
-
+/*
 function generateItemId() {
 
-    let index = itemDB.length - 1;
-    let id;
-    let temp;
-    if (index != -1) {
-        id = itemDB[itemDB.length - 1].getItemId();
-        temp = id.split("-")[1];
-        temp++;
-    }
+    $.ajax({
+        url:"http://localhost:8080/backend/item?option=GenId",
+        method:"GET",
+        success:function (resp){
+            if (resp.status==200){
+                $("#inputItemId").val(resp.data.id);
+            }else {
+                alert(resp.data);
+            }
 
-    if (index == -1) {
-        $("#inputItemId").val("I00-001");
-    } else if (temp <= 9) {
-        $("#inputItemId").val("I00-00" + temp);
-    } else if (temp <= 99) {
-        $("#inputItemId").val("I00-0" + temp);
-    } else {
-        $("#inputItemId").val("I00-" + temp);
-    }
+        }
+    });
 
-}
+}*/
 
 
 // Validations
