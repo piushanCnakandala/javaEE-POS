@@ -1,5 +1,6 @@
             //--------------- CRUD Operations-----------------//
 generateCustomerId();
+loadAllCustomer();
 //customer add
 
     $("#addCust").click(function () {
@@ -66,7 +67,28 @@ function deleteCustomer(){
 //customer Update
 
 $("#customerUpdate").click(function (){
-    let customerId = $("#inputCId").val();
+    var cusData = {
+        id: $("#inputCId").val(),
+        name: $("#inputCName").val(),
+        address: $("#inputCAge").val(),
+        salary: $("#inputCTp").val()
+    }
+    $.ajax({
+        url:"http://localhost:8080/backend/customer",
+        method:"PUT",
+        data: JSON.stringify(cusData),
+        success:function (resp){
+            if (resp.status==200){
+                loadAllCustomer();
+                clearFields();
+            }else {
+                alert(resp.data);
+            }
+        }
+    });
+
+
+    /*let customerId = $("#inputCId").val();
     let customerName = $("#inputCName").val();
     let customerAge = $("#inputCAge").val();
     let customerTp = $("#inputCTp").val();
@@ -80,9 +102,9 @@ $("#customerUpdate").click(function (){
                 loadAllCustomer();
                 clearFields();
                 generateCustomerId();
-                /*$("#btnUpdate").prop('disabled', true);*/
+                /!*$("#btnUpdate").prop('disabled', true);*!/
             }
-    }
+    }*/
 });
 
               // ----------End CRUD Operations------------------------//
@@ -112,8 +134,7 @@ $("#inputCAge").keydown(function (event) {
     }
 });
 
-loadAllCustomer();
-generateCustomerId();
+
 
 function loadAllCustomer(){ //input data to table
     $("#customerTable").empty();
