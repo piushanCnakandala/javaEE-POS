@@ -173,4 +173,52 @@ public class ItemServlet extends HttpServlet {
 
         }
     }
+
+    @Override
+    protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        resp.setContentType("application/json");
+
+        JsonReader reader = Json.createReader(req.getReader());
+        JsonObject jsonObject = reader.readObject();
+
+        String itemIDUpdate = jsonObject.getString("itemId");
+        String itemNameUpdate = jsonObject.getString("name");
+        String itemQtyUpdate = jsonObject.getString("qty");
+        String itemPriceUpdate = jsonObject.getString("price");
+        PrintWriter writer = resp.getWriter();
+        System.out.println(itemIDUpdate + " " + itemQtyUpdate + " " + itemPriceUpdate + " " + itemNameUpdate);
+
+        Connection connection = null;
+        try {
+            connection = dataSource.getConnection();
+            PreparedStatement preparedStatement = connection.prepareStatement("UPDATE item SET name=?, qtyOnHand=?, unitPrice=? WHERE itemId=?");
+            preparedStatement.setObject(1, itemNameUpdate);
+            preparedStatement.setObject(2, itemQtyUpdate);
+            preparedStatement.setObject(3, itemPriceUpdate);
+            preparedStatement.setObject(4, itemIDUpdate);
+
+            if (preparedStatement.executeUpdate() > 0) {
+                JsonObjectBuilder response = Json.createObjectBuilder();
+                resp.setStatus(HttpServletResponse.SC_CREATED);//201
+                response.add("status", 200);
+                response.add("message", "Successfully Updated");
+                response.add("data", "");
+                writer.print(response.build());
+            }
+
+        } catch (SQLException e) {
+            JsonObjectBuilder response = Json.createObjectBuilder();
+            response.add("status", 400);
+            response.add("message", "Error");
+            response.add("data", e.getLocalizedMessage());
+            writer.print(response.build());
+            resp.setStatus(HttpServletResponse.SC_OK); //200
+        } finally {
+            try {
+                connection.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+    }
 }

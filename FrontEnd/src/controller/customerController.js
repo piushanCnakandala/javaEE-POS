@@ -1,9 +1,10 @@
-            //--------------- CRUD Operations-----------------//
+
 generateCustomerId();
 loadAllCustomer();
-//customer add
 
-    $("#addCust").click(function () {
+                //--------------- CRUD Operations-----------------//
+
+$("#addCust").click(function () {
         $("#customerTable>tr").off("click");
 
         $.ajax({
@@ -35,9 +36,7 @@ loadAllCustomer();
         generateCustomerId();
 
 
-    });
-
-//customer delete
+    });  //customer add
 
 function deleteCustomer(){
 
@@ -59,12 +58,7 @@ function deleteCustomer(){
         })
 
     });
-}
-
-
-
-
-//customer Update
+} //customer delete
 
 $("#customerUpdate").click(function (){
     var cusData = {
@@ -87,36 +81,49 @@ $("#customerUpdate").click(function (){
         }
     });
 
-});
+});  //customer Update
 
-              // ----------End CRUD Operations------------------------//
+///////////////////////////////////////////////////////////////////////////////////////////
+              //Other Methods
 
-//btn clear
+$("#btnCustomerSearch").click(function (){
+    var searchId=$("#txtCustomerSearch").val();
+    var response=searchCustomer(searchId);
+    if(response){
+        $("#inputCId").val(response.getCustomerId());
+        $("#inputCName").val(response.getCustomerName());
+        $("#inputCAge").val(response.getCustomerAge());
+        $("#inputCTp").val(response.getCustomerTp());
+
+    }else {
+        clearFields();
+        alert("no such a customer");
+
+    }
+});  //search customer
 
  $("#clearField").click(function (){
      clearFields();
- });
+ });    //btn clear
 
+//////////////////////////////////////////////////////////////////////////////////
 
-$("#inputCId").keydown(function (event) {  //text fields focusing
-    if (event.key == "Enter") {
-        $("#inputCName").focus();
-    }
-});
+function generateCustomerId() {
 
-$("#inputCName").keydown(function (event) {
-    if (event.key == "Enter") {
-        $("#inputCAge").focus();
-    }
-});
+    $.ajax({
+        url:"http://localhost:8080/backend/customer?option=GenId",
+        method:"GET",
+        success:function (resp){
+            if (resp.status==200){
+                $("#inputCId").val(resp.data.id);
+            }else {
+                alert(resp.data);
+            }
 
-$("#inputCAge").keydown(function (event) {
-    if (event.key == "Enter") {
-        $("#inputCTp").focus();
-    }
-});
+        }
+    });
 
-
+}
 
 function loadAllCustomer(){ //input data to table
     $("#customerTable").empty();
@@ -134,25 +141,6 @@ function loadAllCustomer(){ //input data to table
         }
     });
 }
-
-
-//search customer
-
-$("#btnCustomerSearch").click(function (){
-var searchId=$("#txtCustomerSearch").val();
-var response=searchCustomer(searchId);
-if(response){
-    $("#inputCId").val(response.getCustomerId());
-    $("#inputCName").val(response.getCustomerName());
-    $("#inputCAge").val(response.getCustomerAge());
-    $("#inputCTp").val(response.getCustomerTp());
-
-}else {
-    clearFields();
-    alert("no such a customer");
-
-}
-});
 
 function searchCustomer(id){
     for(let i =0;i<customerDB.length;i++){
@@ -183,22 +171,27 @@ function clearFields(){
 }
 
 
-function generateCustomerId() {
+$("#inputCId").keydown(function (event) {  //text fields focusing
+    if (event.key == "Enter") {
+        $("#inputCName").focus();
+    }
+});
 
-    $.ajax({
-        url:"http://localhost:8080/backend/customer?option=GenId",
-        method:"GET",
-        success:function (resp){
-            if (resp.status==200){
-                $("#inputCId").val(resp.data.id);
-            }else {
-                alert(resp.data);
-            }
+$("#inputCName").keydown(function (event) {
+    if (event.key == "Enter") {
+        $("#inputCAge").focus();
+    }
+});
 
-        }
-    });
+$("#inputCAge").keydown(function (event) {
+    if (event.key == "Enter") {
+        $("#inputCTp").focus();
+    }
+});
 
-}
+
+
+
 
 
 // Validations

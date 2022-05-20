@@ -54,27 +54,33 @@ $("#addItem").click(function () {
 
 
 $("#btnItemUpdate").click(function (){
-    let itemId = $("#inputItemId").val();
-    let itemName = $("#inputItemName").val();
-    let itemQuantity = $("#inputQuantity").val();
-    let itemPrice= $("#inputItemPrice").val();
-
-    for (var i=0;i<itemDB.length;i++) {
-        if (itemDB[i].getItemId()== itemId) {
-
-            itemDB[i].setItemName(itemName);
-            itemDB[i].setItemQty(itemQuantity);
-            itemDB[i].setItemPrice(itemPrice);
-
-            loadAllItems();
-            clearFields();
-
-        }
+    var itemData = {
+        id: $("#inputItemId").val(),
+        name: $("#inputItemName").val(),
+        qty: $("#inputQuantity").val(),
+        price: $("#inputItemPrice").val()
     }
+    $.ajax({
+        url:`http://localhost:8080/backend/item`,
+        method:"PUT",
+        data: JSON.stringify(itemData),
+        success:function (resp){
+            if (resp.status==200){
+               loadAllItems();
+               clearFields();
+            }else {
+                alert(resp.data);
+            }
+        }
+    });
 });  //item Update
 
 
             // ----------End CRUD Operations
+
+////////////////////////////////////////////////////////////////////////////
+
+                       //other Methods
 
 $("#btnSearchItem").click(function (){
     var searchId=$("#txtItemSearch").val();
@@ -92,13 +98,21 @@ $("#btnSearchItem").click(function (){
     }
 });  //search Item
 
-
-
-                 //other Methods
-
 $("#btnClear").click(function (){
     clearFields();
 }) //btn clear
+
+
+
+function searchItem(id){
+    for(let i =0;i<itemDB.length;i++){
+        if(itemDB[i].getItemId()==id){
+            return itemDB[i];
+
+        }
+
+    }
+}
 
 function loadAllItems(){ //input data to table
     $("#itemTable").empty();
@@ -142,34 +156,6 @@ function bindItemRow(){
     });
 }
 
-$("#inputItemId").keydown(function (event) { //text fields focusing
-    if (event.key == "Enter") {
-        $("#inputItemName").focus();
-    }
-});
-
-$("#inputItemName").keydown(function (event) {
-    if (event.key == "Enter") {
-        $("#inputQuantity").focus();
-    }
-});
-
-$("#inputQuantity").keydown(function (event) {
-    if (event.key == "Enter") {
-        $("#inputItemPrice").focus();
-    }
-});
-
-function searchItem(id){
-    for(let i =0;i<itemDB.length;i++){
-        if(itemDB[i].getItemId()==id){
-            return itemDB[i];
-
-        }
-
-    }
-}
-
 $("#btnClear").click(function (){
     clearFields();
 });
@@ -194,6 +180,28 @@ function generateItemId() {
     });
 
 }
+
+
+
+$("#inputItemId").keydown(function (event) { //text fields focusing
+    if (event.key == "Enter") {
+        $("#inputItemName").focus();
+    }
+});
+
+$("#inputItemName").keydown(function (event) {
+    if (event.key == "Enter") {
+        $("#inputQuantity").focus();
+    }
+});
+
+$("#inputQuantity").keydown(function (event) {
+    if (event.key == "Enter") {
+        $("#inputItemPrice").focus();
+    }
+});
+
+
 
 
 // Validations
