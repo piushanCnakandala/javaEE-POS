@@ -87,24 +87,6 @@ $("#customerUpdate").click(function (){
         }
     });
 
-
-    /*let customerId = $("#inputCId").val();
-    let customerName = $("#inputCName").val();
-    let customerAge = $("#inputCAge").val();
-    let customerTp = $("#inputCTp").val();
-
-    for (var i = 0; i < customerDB.length; i++) {
-            if (customerDB[i].getCustomerId()==customerId){
-
-                customerDB[i].setCustomerName(customerName);
-                customerDB[i].setCustomerAge(customerAge);
-                customerDB[i].setCustomerTp(customerTp);
-                loadAllCustomer();
-                clearFields();
-                generateCustomerId();
-                /!*$("#btnUpdate").prop('disabled', true);*!/
-            }
-    }*/
 });
 
               // ----------End CRUD Operations------------------------//

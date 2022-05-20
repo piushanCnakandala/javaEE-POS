@@ -1,8 +1,8 @@
-// CRUD Operations
+
 generateItemId();
 loadAllItems();
 
-//item add
+            // CRUD Operations
 
 $("#addItem").click(function () {
 
@@ -32,28 +32,26 @@ $("#addItem").click(function () {
    /* loadAllItems();
     clearInputItemFields();*/
 
-});
+});  //item add
 
 
-//item Delete
-
-function deleteItem(){
-
-    $("#btnDelete").click(function () {
+ $("#btnDelete").click(function () {
         let itemId = $("#inputItemId").val();
-        for (let i=0;i< itemDB.length;i++){
-            if (itemDB[i].getItemId()==itemId){
-                itemDB.splice(i,1);
+        $.ajax({
+            url:`http://localhost:8080/backend/item?customerID=${itemId}`,
+            method: "DELETE",
+            success:function (resp){
+                if (resp.status==200){
+                    loadAllItems();
+                    clearInputItemFields();
+                    generateItemId();
+                }else {
+                    alert(resp.data);
+                }
             }
-        }
-        loadAllItems();
-        clearInputItemFields();
-        generateItemId();
+        });
+    });  //item Delete
 
-    });
-}
-
-//item Update
 
 $("#btnItemUpdate").click(function (){
     let itemId = $("#inputItemId").val();
@@ -73,16 +71,34 @@ $("#btnItemUpdate").click(function (){
 
         }
     }
-});
+});  //item Update
 
 
             // ----------End CRUD Operations
 
-//btn clear
+$("#btnSearchItem").click(function (){
+    var searchId=$("#txtItemSearch").val();
+    var response=searchItem(searchId);
+    if(response){
+        $("#inputItemId").val(response.getItemId());
+        $("#inputItemName").val(response.getItemName());
+        $("#inputQuantity").val(response.getItemQty());
+        $("#inputItemPrice").val(response.getItemPrice());
+
+    }else {
+        clearFields();
+        alert("no such a Item");
+
+    }
+});  //search Item
+
+
+
+                 //other Methods
 
 $("#btnClear").click(function (){
     clearFields();
-})
+}) //btn clear
 
 function loadAllItems(){ //input data to table
     $("#itemTable").empty();
@@ -108,7 +124,6 @@ function loadAllItems(){ //input data to table
 
     }*/
 }
-
 
 function bindItemRow(){
     $("#itemTable>tr").click(function () {  //return data to the text fields
@@ -145,24 +160,6 @@ $("#inputQuantity").keydown(function (event) {
     }
 });
 
-   //search Item
-
-$("#btnSearchItem").click(function (){
-    var searchId=$("#txtItemSearch").val();
-    var response=searchItem(searchId);
-    if(response){
-        $("#inputItemId").val(response.getItemId());
-        $("#inputItemName").val(response.getItemName());
-        $("#inputQuantity").val(response.getItemQty());
-        $("#inputItemPrice").val(response.getItemPrice());
-
-    }else {
-        clearFields();
-        alert("no such a Item");
-
-    }
-});
-
 function searchItem(id){
     for(let i =0;i<itemDB.length;i++){
         if(itemDB[i].getItemId()==id){
@@ -177,11 +174,9 @@ $("#btnClear").click(function (){
     clearFields();
 });
 
-
 function clearInputItemFields(){    //clear input text fiels
     $("#inputItemName,#inputItemId,#inputQuantity,#inputItemPrice").val("");
 }
-
 
 function generateItemId() {
 
