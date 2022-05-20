@@ -176,51 +176,49 @@ public class CustomerServlet extends HttpServlet {
 
     @Override
     protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+
         resp.setContentType("application/json");
 
         JsonReader reader = Json.createReader(req.getReader());
         JsonObject jsonObject = reader.readObject();
 
-        String id = jsonObject.getString("cusId");
-        String name = jsonObject.getString("custName");
-        String address =jsonObject.getString("cusAddress");
-        String salary =jsonObject.getString("cusSalary");
-        System.out.println(id+" "+name+" "+address+" "+salary);
+        String cusIDUpdate = jsonObject.getString("cusId");
+        String cusNameUpdate = jsonObject.getString("custName");
+        String cusAddressUpdate = jsonObject.getString("cusAddress");
+        String cusSalaryUpdate = jsonObject.getString("cusSalary");
+        PrintWriter writer = resp.getWriter();
+        System.out.println(cusIDUpdate + " " + cusAddressUpdate + " " + cusSalaryUpdate + " " + cusNameUpdate);
 
+        Connection connection = null;
+        try {
+            connection = dataSources.getConnection();
+            PreparedStatement pstm = connection.prepareStatement("UPDATE customer SET name=?, address=?, salary=? WHERE id=?");
+            pstm.setObject(1, cusNameUpdate);
+            pstm.setObject(2, cusAddressUpdate);
+            pstm.setObject(3, cusSalaryUpdate);
+            pstm.setObject(4, cusIDUpdate);
 
-        try (PrintWriter writer = resp.getWriter()) {
-            Connection connection = null;
+            if (pstm.executeUpdate() > 0) {
+                JsonObjectBuilder response = Json.createObjectBuilder();
+                resp.setStatus(HttpServletResponse.SC_CREATED);//201
+                response.add("status", 200);
+                response.add("message", "Successfully Updated");
+                response.add("data", "");
+                writer.print(response.build());
+            }
+
+        } catch (SQLException e) {
+            JsonObjectBuilder response = Json.createObjectBuilder();
+            response.add("status", 400);
+            response.add("message", "Error");
+            response.add("data", e.getLocalizedMessage());
+            writer.print(response.build());
+            resp.setStatus(HttpServletResponse.SC_OK); //200
+        } finally {
             try {
-                connection = dataSources.getConnection();
-                PreparedStatement preparedStatement = connection.prepareStatement("UPDATE custmer set name=?,address=?,salary=? WHERE id=?");
-
-                preparedStatement.setObject(1, name);
-                preparedStatement.setObject(2, address);
-                preparedStatement.setObject(3, salary);
-                preparedStatement.setObject(4, id);
-
-                if (preparedStatement.executeUpdate() > 0) {
-                    JsonObjectBuilder objectBuilder = Json.createObjectBuilder();
-                    resp.setStatus(HttpServletResponse.SC_CREATED);
-                    objectBuilder.add("status", 200);
-                    objectBuilder.add("message", "customer Update success");
-                    objectBuilder.add("data", "");
-                    writer.print(objectBuilder.build());
-                }
-
+                connection.close();
             } catch (SQLException e) {
-                JsonObjectBuilder objectBuilder = Json.createObjectBuilder();
-                objectBuilder.add("status", 400);
-                objectBuilder.add("message", "Error");
-                objectBuilder.add("data", e.getLocalizedMessage());
-                writer.print(objectBuilder.build());
                 e.printStackTrace();
-            } finally {
-                try {
-                    connection.close();
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
             }
         }
 
