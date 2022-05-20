@@ -74,7 +74,7 @@ $("#customerUpdate").click(function (){
         salary: $("#inputCTp").val()
     }
     $.ajax({
-        url:"http://localhost:8080/backend/customer",
+        url:`http://localhost:8080/backend/customer`,
         method:"PUT",
         data: JSON.stringify(cusData),
         success:function (resp){

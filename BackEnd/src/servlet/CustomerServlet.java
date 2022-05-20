@@ -191,13 +191,13 @@ public class CustomerServlet extends HttpServlet {
         Connection connection = null;
         try {
             connection = dataSources.getConnection();
-            PreparedStatement pstm = connection.prepareStatement("UPDATE customer SET name=?, address=?, salary=? WHERE id=?");
-            pstm.setObject(1, cusNameUpdate);
-            pstm.setObject(2, cusAddressUpdate);
-            pstm.setObject(3, cusSalaryUpdate);
-            pstm.setObject(4, cusIDUpdate);
+            PreparedStatement preparedStatement = connection.prepareStatement("UPDATE customer SET name=?, address=?, salary=? WHERE id=?");
+            preparedStatement.setObject(1, cusNameUpdate);
+            preparedStatement.setObject(2, cusAddressUpdate);
+            preparedStatement.setObject(3, cusSalaryUpdate);
+            preparedStatement.setObject(4, cusIDUpdate);
 
-            if (pstm.executeUpdate() > 0) {
+            if (preparedStatement.executeUpdate() > 0) {
                 JsonObjectBuilder response = Json.createObjectBuilder();
                 resp.setStatus(HttpServletResponse.SC_CREATED);//201
                 response.add("status", 200);
