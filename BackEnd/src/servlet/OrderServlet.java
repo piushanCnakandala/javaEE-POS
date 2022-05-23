@@ -68,6 +68,29 @@ public class OrderServlet extends HttpServlet {
                          writer.print(dataMsgBuilder.build());
                          break;
 
+                case "selected_cus_data" :
+                    String selectCusId = req.getParameter("selectCusId");
+                    pstm=connection.prepareStatement("SELECT * FROM customer WHERE id=?");
+                    pstm.setObject(1,selectCusId);
+                    rst= pstm.executeQuery();
+                    if (rst.next()){
+                        String cusName = rst.getString(2);
+                        String cusAddress = rst.getString(3);
+                        String cusSalary = rst.getString(4);
+                        objectBuilder.add("cusName",cusName);
+                        objectBuilder.add("cusAddress",cusAddress);
+                        objectBuilder.add("cusSalary",cusSalary);
+
+                        arrayBuilder.add(objectBuilder.build());
+                    }
+
+                    dataMsgBuilder.add("data",arrayBuilder.build());
+                    dataMsgBuilder.add("message" ,"Done");
+                    dataMsgBuilder.add("status",200);
+                    writer.print(dataMsgBuilder.build());
+                    break;
+
+
             }
 
 
