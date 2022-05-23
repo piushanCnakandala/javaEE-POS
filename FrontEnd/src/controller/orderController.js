@@ -1,5 +1,6 @@
 loadAllCustomerIds();
 selectedCustomer();
+selectedItem();
 loadAllItemIds();
 generateOrderId();
 setDate();
@@ -75,7 +76,7 @@ function selectedCustomer(CustomerId){
 
     $.ajax({
         url:`http://localhost:8080/backend/order?option=selected_cus_data&selectCusId=${CustomerId}`,
-        method:"get",
+        method:"GET",
         success:function (resp){
             if (resp.status==200){
                 for (const customer of resp.data) {
@@ -88,20 +89,14 @@ function selectedCustomer(CustomerId){
             }
         }
     });
-    /*for (const i in customerDB){
-        if (customerDB[i].getCustomerId()==CustomerId) {
-            let element = customerDB[i];
-            $("#txtcusName").val(element.getCustomerName());
-            $("#txtAge").val(element.getCustomerAge());
-            $("#txtTp").val(element.getCustomerTp());
-        }
-    }*/
 }
 
 
 /* load item ids to cmb (item)*/
 function loadAllItemIds() {
     $("#idItemCmb").empty();
+    let itemHint = `<option disabled selected>Select Item ID</option>`;
+    $("#idItemCmb").append(itemHint);
     $.ajax({
         url : `http://localhost:8080/backend/order?option=cmb_all_item_Ids`,
         method:"GET",
@@ -120,14 +115,31 @@ function loadAllItemIds() {
 }
 /*load item data to text fields*/
 function selectedItem(ItemId){
-    for (const i in itemDB){
+
+    $.ajax({
+        url:`http://localhost:8080/backend/order?option=selected_item_data&selectItemId=${ItemId}`,
+        method:"GET",
+        success:function (resp){
+            if (resp.status==200){
+                for (const item of resp.data) {
+                    $("#txtitemName").val(item.itemName);
+                    $("#txtqtyOnHand").val(item.itemAddress);
+                    $("#txtprice").val(item.itemSalary);
+                }
+            }else {
+                alert(resp.data);
+            }
+        }
+    });
+
+   /* for (const i in itemDB){
         if (itemDB[i].getItemId()==ItemId) {
             let element = itemDB[i];
             $("#txtitemName").val(element.getItemName());
             $("#txtqtyOnHand").val(element.getItemQty());
             $("#txtprice").val(element.getItemPrice());
         }
-    }
+    }*/
 }
 ////////////////////////////////////////////////////////////////////////////////////////
 

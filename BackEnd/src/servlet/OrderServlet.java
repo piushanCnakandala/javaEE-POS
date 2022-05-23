@@ -90,7 +90,27 @@ public class OrderServlet extends HttpServlet {
                     writer.print(dataMsgBuilder.build());
                     break;
 
+                case "selected_item_data" :
+                    String selectItemId = req.getParameter("selectItemId");
+                    pstm=connection.prepareStatement("SELECT * FROM item WHERE itemId=?");
+                    pstm.setObject(1,selectItemId);
+                    rst= pstm.executeQuery();
+                    if (rst.next()){
+                        String itemName = rst.getString(2);
+                        String itemAddress = rst.getString(3);
+                        String itemSalary = rst.getString(4);
+                        objectBuilder.add("itemName",itemName);
+                        objectBuilder.add("itemAddress",itemAddress);
+                        objectBuilder.add("itemSalary",itemSalary);
 
+                        arrayBuilder.add(objectBuilder.build());
+                    }
+
+                    dataMsgBuilder.add("data",arrayBuilder.build());
+                    dataMsgBuilder.add("message" ,"Done");
+                    dataMsgBuilder.add("status",200);
+                    writer.print(dataMsgBuilder.build());
+                    break;
             }
 
 
