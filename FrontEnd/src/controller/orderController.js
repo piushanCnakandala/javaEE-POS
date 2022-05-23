@@ -1,4 +1,6 @@
-
+loadAllCustomerIds();
+selectedCustomer();
+loadAllItemIds();
 generateOrderId();
 setDate();
 
@@ -50,15 +52,20 @@ $("#idItemCmb").change(function (e){
              /* load customer ids to cmb (customer)*/
 function loadAllCustomerIds() {
     $("#idCustCmb").empty();
-
-     let cusHint=`<option disabled selected> Select Customer ID</option>`;
-
-    $("#idCustCmb").append(cusHint);
-
-    for (let i in customerDB) {
-        let option = `<option value="${customerDB[i].getCustomerId()}">${customerDB[i].getCustomerId()}</option>`
-        $("#idCustCmb").append(option);
-    }
+      $.ajax({
+          url : `http://localhost:8080/backend/order?option=cmb_all_customer_Ids`,
+          method:"GET",
+          success:function (resp) {
+              if (resp.status==200){
+                  for (const customer of resp.data) {
+                      let option = `<option value="${customer.id}">${customer.id}</option>`;
+                      $("#idCustCmb").append(option);
+                  }
+              }else {
+                  alert(resp.data);
+              }
+          }
+      });
 }
              /*load customer data to text fields*/
 function selectedCustomer(CustomerId){

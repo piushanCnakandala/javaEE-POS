@@ -15,6 +15,7 @@ $("#addCust").click(function () {
                 if (resp.status==200){
                     loadAllCustomer();
                     generateCustomerId();
+                    loadAllCustomerIds();
 
                 }else {
                     alert(resp.data)
