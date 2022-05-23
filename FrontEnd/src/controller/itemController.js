@@ -15,6 +15,7 @@ $("#addItem").click(function () {
            if (resp.status==200){
                loadAllItems();
                generateItemId()
+               loadAllItemIds();
            }else {
                alert(resp.data)
            }

@@ -148,7 +148,7 @@ public class ItemServlet extends HttpServlet {
         Connection connection = null;
         try {
             connection = dataSource.getConnection();
-            PreparedStatement pstm = connection.prepareStatement("DELETE FROM customer WHERE itemId=?");
+            PreparedStatement pstm = connection.prepareStatement("DELETE FROM item WHERE itemId=?");
             pstm.setObject(1,itemID);
 
             if (pstm.executeUpdate() > 0) {
