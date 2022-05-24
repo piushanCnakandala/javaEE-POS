@@ -215,7 +215,7 @@ public class OrderServlet extends HttpServlet {
                 if (connection != null) {
                     connection.close();
                 }
-//                connection.close();
+//
             } catch (SQLException e) {
                 e.printStackTrace();
             }
@@ -247,6 +247,7 @@ public class OrderServlet extends HttpServlet {
         }
         return true;
     }
+
     public boolean updateItem(String ItemCode, String itemQty) throws SQLException {
         PreparedStatement pstm = connection.prepareStatement("UPDATE item SET qtyOnHand=(qtyOnHand-?) WHERE itemId=?");
         pstm.setObject(1, itemQty);

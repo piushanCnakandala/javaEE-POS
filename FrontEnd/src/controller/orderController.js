@@ -264,13 +264,9 @@ function discountCal() {
     tempDiscount = 100-discount;
     discounted_price = (tempDiscount*fullTotal)/100;
     console.log(typeof discounted_price);
-    $("#lblTotal").text(discounted_price +" LKR");
+    $("#subTotal").text(discounted_price +" LKR");
 
 }
-
-
-
-
 
 function purchaseOrder() {
 
