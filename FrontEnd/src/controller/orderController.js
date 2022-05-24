@@ -14,6 +14,7 @@ $("#btnAddToCart").click(function (){
 addCart();
     clearInputItems();
 
+
 });
 
 $("#btnPurchase").click(function () {
