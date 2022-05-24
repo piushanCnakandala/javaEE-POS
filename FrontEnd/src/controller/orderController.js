@@ -132,14 +132,6 @@ function selectedItem(ItemId){
         }
     });
 
-   /* for (const i in itemDB){
-        if (itemDB[i].getItemId()==ItemId) {
-            let element = itemDB[i];
-            $("#txtitemName").val(element.getItemName());
-            $("#txtqtyOnHand").val(element.getItemQty());
-            $("#txtprice").val(element.getItemPrice());
-        }
-    }*/
 }
 ////////////////////////////////////////////////////////////////////////////////////////
 
@@ -147,24 +139,16 @@ function selectedItem(ItemId){
 
 function generateOrderId() {
 
-    let index = orderDb.length - 1;
-    let id;
-    let temp;
-    if (index != -1) {
-        id = orderDb[orderDb.length - 1].getOrderId();
-        temp = id.split("-")[1];
-        temp++;
-    }
+    $.ajax({
+        url: "http://localhost:8080/backend/order?option=GENERATED_OID", method: 'GET', success: function (resp) {
+            if (resp.status == 200) {
+                $("#oIdItxt").val(resp.data.oId);
+            } else {
+                alert(resp.data);
+            }
+        }
 
-    if (index == -1) {
-        $("#oIdItxt").val("O00-001");
-    } else if (temp <= 9) {
-        $("#oIdItxt").val("O00-00" + temp);
-    } else if (temp <= 99) {
-        $("#oIdItxt").val("O00-0" + temp);
-    } else {
-        $("#oIdItxt").val("O00-" + temp);
-    }
+    });
 
 }
 
@@ -290,15 +274,17 @@ function discountCal() {
 
 function purchaseOrder() {
 
-    let orderId = $("#oIdItxt").val();
-    let customer = selectedCustomerId;
-    let orderDate = $("#txtDate").val();
-    let discount = parseInt($("#dis").val());
-    let total = $("#lblTotal").text();
-    let subTotal = $("#subTotal").text();
-
-    var orderObj = new OrderDTO(orderId,customer,orderDate,discount,total,subTotal);
-    orderDb.push(orderObj);
+    var obj = {
+        order: {
+            orderId:$("#oIdItxt").val(),
+            customer: selectedCustomerId,
+            orderDate: $("#txtDate").val(),
+            discount: parseInt($("#dis").val()),
+            total: $("#lblTotal").text().split(" ")[0],
+            subTotal: $("#subTotal").text().split(" ")[0]
+        },
+        orderDetail:[]
+    }
 
     for (let i = 0; i < $('#orderTbody tr').length; i++) {
 
@@ -308,9 +294,31 @@ function purchaseOrder() {
         tblItemQty = $('#orderTbody').children().eq(i).children().eq(3).text();
         tblItemTotal = $('#orderTbody').children().eq(i).children().eq(4).text();
 
-        var orderDetailObj = new OrderDetailDTO(orderId,tblItemId,tblItemName,tblItemPrice,tblItemQty,tblItemTotal);
-        orderDetailDB.push(orderDetailObj);
+        var details = {
+            itemCode:tblItemId,
+            itemName:tblItemName,
+            itemPrice:tblItemPrice,
+            itemQty:tblItemQty,
+            itemTotal:tblItemTotal
+        }
+        obj.orderDetail.push(details);
+
     }
+    console.log(JSON.stringify(obj));
+
+    $.ajax({
+        url: "http://localhost:8080/backend/order",
+        method: "POST",
+        data: JSON.stringify(obj),
+        success: function (resp) {
+            if (resp.status==200){
+                generateOrderId();
+                clearPurchaseFields();
+            }else {
+                alert(resp.data);
+            }
+        }
+    });
 
 }
 
